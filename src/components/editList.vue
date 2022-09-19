@@ -30,7 +30,7 @@
           >
             <div class="book_info">
               <span>{{ data.bookSourceName || data.sourceName }}</span>
-              <span>最后修改：{{ formatTime(data.lastUpdateTime) || "未知" }}</span>
+              <span v-if="isBookSource">最后修改：{{ formatTime(data.lastUpdateTime) }}</span>
               <span>分组：{{ data.bookSourceGroup || data.sourceGroup || "无分组" }}</span>
             </div>
             <div>{{ data.bookSourceUrl || data.sourceUrl }}</div>
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { reactive, ref, toRefs, watchEffect } from "vue";
+import { reactive, ref, toRefs, watchEffect, computed } from "vue";
 import store from "@/store";
 import * as api from "@/utils/api";
 
@@ -115,11 +115,14 @@ export default {
         );
       }
     };
-  watchEffect(() => {
-    const isBookSource = /bookSource/.test(location.href);
-    const sources = isBookSource ? store.state.bookSources : store.state.rssSources;
-    data.sources = sources;
-  });
+    watchEffect(() => {
+      const isBookSource = /bookSource/.test(location.href);
+      const sources = isBookSource ? store.state.bookSources : store.state.rssSources;
+      data.sources = sources;
+    });
+    const isBookSource = computed(() => {
+      return /bookSource/.test(window.location.href)
+    });
     const deleteActiveSource = () => {
       if (data.delArr.length === 0) {
         console.log("没有选中的书源");
@@ -176,6 +179,7 @@ export default {
     };
     return {
       currentActive,
+      isBookSource,
       deleteActiveSource,
       handleItemClick,
       filterSource,
