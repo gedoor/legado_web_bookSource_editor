@@ -58,5 +58,5 @@ jobs:
           mv -f $GITHUB_WORKSPACE/dist/* legado/app/src/main/assets/web/source/
           cd legado
           git add -A
-          git commit -m "web bookSource editor: ${{ env.APP_VER }}"
+          git commit -m "web source editor: ${{ env.APP_VER }}"
           git push
