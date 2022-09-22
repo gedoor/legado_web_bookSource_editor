@@ -9,7 +9,7 @@
       :value="content"
       ref="attr"
       @input="change"
-      @blur="changeHistory"
+      @blur="changeHistory();restoreHeight()"
       @focus="changeHeight"
     ></textarea>
   </div>
@@ -85,6 +85,8 @@ export default {
         store.commit("editHistory", store.state.currentSource);
       }
     };
+
+    const restoreHeight = () => attr.value.style = "";
     const changeHeight = () => {
       nextTick(() => {
         let textArea = attr.value;
@@ -101,6 +103,7 @@ export default {
       change,
       attr,
       changeHeight,
+      restoreHeight,
     };
   },
 };
