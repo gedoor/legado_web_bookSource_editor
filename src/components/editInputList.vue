@@ -16,18 +16,24 @@
 
 <script>
 import editInput from "@/components/editInput";
-import config from "@/utils/rssSourceEditConfig.js";
 import { reactive, toRefs } from "vue";
 import useCounter from "@/utils/useCounter";
 
 export default {
+  name: "editInputList",
+  props: {
+    data: {
+      type: Array,
+      required: true,
+    }
+  },
   components: {
     editInput,
   },
-  setup() {
+  setup(props) {
     const { upData, getContent } = useCounter();
     const data = reactive({
-      data: config.other,
+      data: props.data,
     });
     return {
       ...toRefs(data),
