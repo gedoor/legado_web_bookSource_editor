@@ -40,7 +40,7 @@ jobs:
           npm run-script build
 
       - name: Set Env
-        if: ${{ github.actor == 'gedoor' }}
+        # if: ${{ github.actor == 'gedoor' }}
         shell: bash
         run: |
           version="v$(date -d "8 hour" -u +3.%y.%m%d%H)"
