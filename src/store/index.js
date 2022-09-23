@@ -54,6 +54,8 @@ export default createStore({
       let index = sources.findIndex(
         (element) => element[searchKey] === source[searchKey]
       );
+      //去掉响应 toRaw?
+      source = JSON.parse(JSON.stringify(source));
       if (index > -1) {
         sources.splice(index, 1, source);
       } else {
