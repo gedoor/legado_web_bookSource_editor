@@ -474,7 +474,7 @@ export default {
         hint: "段评URL",
       },
       {
-        title: "发布者头像",
+        title: "发布头像",
         rows: 1,
         id: "ruleReview_avatarRule",
         type: "String",

@@ -74,8 +74,8 @@ export default createStore({
         "true": true,
         "false": false
       };
-      if (data.type === "Boolean") value = convertor[value] || value;
-      if (data.type === "Number") value = Number(value) || value;
+      if (data.type === "Boolean") value = convertor[value];
+      if (data.type === "Number") value = Number(value);
 
       if (data.key.includes("_")) {
         let rule1 = data.key.split("_")[0],
@@ -92,6 +92,9 @@ export default createStore({
       }
       // edit last time
       state.currentSource.lastUpdateTime = new Date().getTime();
+      //阅读app通过是否存在ruleToc键值判断3.0书源和2.0书源
+      if (/bookSource/.test(location.href))
+        state.currentSource["ruleToc"] = state.currentSource["ruleToc"] || {};
     },
     // update editTab tabName and editTab info
     changeTabName(state, tabName) {
