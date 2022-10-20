@@ -36,7 +36,7 @@ export default {
       data.printDebug = store.state.deBugMsg;
     });
     const startSearch = () => {
-      document.querySelectorAll(".menu>button")[6].click();
+      document.querySelectorAll(".menu>button")[7].click();
     };
     const isBookSource = computed(() => {
       return /bookSource/.test(window.location.href);
