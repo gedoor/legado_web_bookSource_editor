@@ -4,40 +4,13 @@ on: [workflow_dispatch]
 
 
 jobs:
-  prepare:
-    runs-on: ubuntu-latest
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
-      version: ${{ env.APP_VER }}
-    steps:
-      - name: Set Env
-        shell: bash
-        run: |
-          version="v$(date -d "8 hour" -u +3.%y.%m%d%H)"
-          echo "APP_VER=$version" >> $GITHUB_ENV
-          tag_name=$(curl -s "https://api.github.com/repos/${{ github.actor }}/legado_web_source_editor/releases/latest" | jq .tag_name -r)
-          echo "TAG_NAME=$tag_name" >> $GITHUB_ENV
-
-      - name: Create Release
-        if: ${{ env.TAG_NAME != env.APP_VER }}
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ env.APP_VER }}
-          release_name: ${{ env.APP_VER }}
-          draft: false
-          prerelease: false
-
-  buildMaster:
-    needs: [ prepare ]
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout master
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
       - uses: actions/cache@v3
         with:
@@ -46,28 +19,25 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Build Master
+      - name: Set Env
+        shell: bash
+        run: |
+          version="v$(date -d "8 hour" -u +3.%y.%m%d%H)"
+          echo "VERSION=$version" >> $GITHUB_ENV
+
+      - name: Build
         run: |
           npm install
-          npm run-script lint
           npm run-script build
-          zip -q -r dist.zip ./dist
+          zip -q -r ${{github.ref_name}}_${{env.VERSION}}.zip ./dist
 
-      - name: Upload Release Asset
-        if: ${{ needs.prepare.outputs.upload_url }}
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
         with:
-          upload_url: ${{ needs.prepare.outputs.upload_url }}
-          asset_path: ${{ github.workspace }}/dist.zip
-          asset_name: dist_${{ needs.prepare.outputs.version }}.zip
-          asset_content_type: application/octet-stream
+          name: ${{ env.VERSION }}
+          tag_name: ${{ env.VERSION }}
+          draft: false
+          prerelease: false
+          files: ${{ github.workspace }}/*.zip
 
-      - name: Upload Master
-        if: ${{ needs.prepare.outputs.upload_url }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: dist_${{ needs.prepare.outputs.version }}
-          path: ${{ github.workspace }}/dist
-          if-no-files-found: error
+

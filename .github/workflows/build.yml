@@ -1,15 +1,21 @@
 name: Build
 
-on: [workflow_dispatch, push]
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
 
+env:
+  UPSTREAM_REPOSITORY: gedoor/legado_web_source_editor
 
 jobs:
-  master:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout legado_web_source_editor Project
-        uses: actions/checkout@v2
+      - name: Checkout Project
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -25,12 +31,13 @@ jobs:
           npm install
 
       - name: Format code
+        if: ${{ github.repository == env.UPSTREAM_REPOSITORY }}
         run: |
           npm run-script lint
 
       - name: push changes
-        if: ${{ github.actor == 'gedoor' }}
-        uses: stefanzweifel/git-auto-commit-action@v4.14.1
+        if: ${{ github.repository == env.UPSTREAM_REPOSITORY }}
+        uses: stefanzweifel/git-auto-commit-action@v4.16.0
         with:
           commit_message: 'style: format code'
           file_pattern: src
@@ -40,20 +47,20 @@ jobs:
           npm run-script build
 
       - name: Set Env
-        # if: ${{ github.actor == 'gedoor' }}
+        if: ${{ github.repository == env.UPSTREAM_REPOSITORY }}
         shell: bash
         run: |
           version="v$(date -d "8 hour" -u +3.%y.%m%d%H)"
           echo "APP_VER=$version" >> $GITHUB_ENV
 
       - name: Push changes to legado
-        # if: ${{ github.actor == 'gedoor' }}
+        continue-on-error: true
+        if: ${{ github.repository == env.UPSTREAM_REPOSITORY }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git clone "https://gedoor:${{ secrets.ACTIONS_TOKEN }}@github.com/gedoor/legado" --depth 1
-          rm -rf legado/app/src/main/assets/web/source
-          mkdir legado/app/src/main/assets/web/source
+          rm -rf legado/app/src/main/assets/web/source/*
           mv -f $GITHUB_WORKSPACE/dist/* legado/app/src/main/assets/web/source/
           cd legado
           git add -A
