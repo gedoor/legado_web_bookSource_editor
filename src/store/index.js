@@ -13,8 +13,9 @@ export default createStore({
   },
   getters: {
     sources(state) {
-      return /bookSource/.test(location.href) ?
-        state.bookSources : state.rssSources
+      return /bookSource/.test(location.href)
+        ? state.bookSources
+        : state.rssSources;
     },
   },
   mutations: {
@@ -32,8 +33,9 @@ export default createStore({
     },
     //删除源
     deleteSources(state, data) {
-      let sources = /bookSource/.test(location.href) ?
-        state.bookSources : state.rssSources;
+      let sources = /bookSource/.test(location.href)
+        ? state.bookSources
+        : state.rssSources;
       data.forEach((source) => {
         let index = sources.indexOf(source);
         if (index > -1) sources.splice(index, 1);
@@ -71,8 +73,8 @@ export default createStore({
     changeCurrentSourceValue(state, data) {
       let value = data.value;
       let convertor = {
-        "true": true,
-        "false": false
+        true: true,
+        false: false,
       };
       if (data.type === "Boolean") value = convertor[value];
       if (data.type === "Number") value = Number(value);

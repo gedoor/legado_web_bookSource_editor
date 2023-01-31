@@ -187,6 +187,13 @@ export default {
         type: "String",
         hint: "文章正文样式 填写css",
       },
+      {
+        title: "注入规则",
+        rows: 3,
+        id: "injectJs",
+        type: "String",
+        hint: "注入网页的JavaScript",
+      },
     ],
   },
   other: {

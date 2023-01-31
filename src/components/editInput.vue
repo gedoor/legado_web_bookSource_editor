@@ -9,7 +9,10 @@
       :value="content"
       ref="attr"
       @input="change"
-      @blur="changeHistory();restoreHeight()"
+      @blur="
+        changeHistory();
+        restoreHeight();
+      "
       @focus="adjustHeight"
     ></textarea>
   </div>
@@ -88,7 +91,7 @@ export default {
       }
     };
 
-    const restoreHeight = () => attr.value.style = "";
+    const restoreHeight = () => (attr.value.style = "");
     const adjustHeight = () => {
       attr.value.style.height = calcTextareaHeight(attr.value).height;
     };

@@ -2,11 +2,13 @@
   <div class="left">
     <div>
       <ul>
-        <li v-for="[key, value] in Object.entries(config)"
+        <li
+          v-for="[key, value] in Object.entries(config)"
           @click="changeSelectTabKey(key)"
           :key="key"
-          :class="key === selectTabKey ? 'active' : ''">
-            {{ value.name }}
+          :class="key === selectTabKey ? 'active' : ''"
+        >
+          {{ value.name }}
         </li>
       </ul>
     </div>
@@ -43,7 +45,7 @@ export default {
       document.title = "订阅源编辑";
     }
 
-    const changeSelectTabKey = (key) => data.selectTabKey = key;
+    const changeSelectTabKey = (key) => (data.selectTabKey = key);
 
     const currentTabData = computed(() => {
       return data.config[data.selectTabKey].children;

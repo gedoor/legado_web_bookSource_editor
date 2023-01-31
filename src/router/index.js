@@ -12,7 +12,7 @@ const routes = [
     path: "/rssSource",
     name: "rss-home",
     component: sourceEditor,
-  }
+  },
 ];
 
 const router = createRouter({
