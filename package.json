@@ -25,6 +25,6 @@
     "vite": "^4.2.1",
     "sass": "^1.60.0",
     "vite-plugin-html": "^3.2.0",
-    "unplugin-vue-components": "^0.19.9"
+    "unplugin-vue-components": "^0.24.1"
   }
 }
