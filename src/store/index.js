@@ -1,28 +1,46 @@
 import { createPinia, defineStore } from "pinia";
+import { emptySource } from "../utils/souce";
 
 export default createPinia();
-
+const isBookSource = /bookSource/.test(location.href);
 export const useSourceStore = defineStore("source", {
   state: () => {
     return {
-      url: localStorage.getItem("url") || "",
+      /** @type {import("@/source").BookSoure[]} */
       bookSources: [], // 临时存放所有书源,
+      /** @type {import("@/source").RssSource[]} */
       rssSources: [], // 临时存放所有订阅源
-      currentSource: {}, // 当前编辑的源
+      errorPushSources: [], // 保存到阅读app出错的源
+      /** @type {import("@/source").Source} */
+      currentSource: emptySource, // 当前编辑的源
       currentTab: localStorage.getItem("tabName") || "editTab",
       editTabSource: {}, // 生成序列化的json数据
-      deBugMsg: "",
-      searchKey: "",
+      isDebuging: false,
     };
   },
   getters: {
-    sources: (state) =>
-      /bookSource/.test(location.href) ? state.bookSources : state.rssSources,
+    sources: (state) => (isBookSource ? state.bookSources : state.rssSources),
+    currentSourceUrl: (state) =>
+      isBookSource
+        ? state.currentSource.bookSourceUrl
+        : state.currentSource.sourceUrl,
+    searchKey: (state) =>
+      isBookSource
+        ? state.currentSource.ruleSearch.checkKeyWord || "我的"
+        : null,
   },
   actions: {
+    startDebug() {
+      this.currentTab = "editDebug";
+      this.isDebuging = true;
+    },
+    debugFinish() {
+      this.isDebuging = false;
+    },
+
     //拉取源后保存
     saveSources(data) {
-      if (/bookSource/.test(location.href)) {
+      if (isBookSource) {
         this.bookSources = data;
       } else {
         this.rssSources = data;
@@ -30,9 +48,7 @@ export const useSourceStore = defineStore("source", {
     },
     //删除源
     deleteSources(data) {
-      let sources = /bookSource/.test(location.href)
-        ? this.bookSources
-        : this.rssSources;
+      let sources = isBookSource ? this.bookSources : this.rssSources;
       data.forEach((source) => {
         let index = sources.indexOf(source);
         if (index > -1) sources.splice(index, 1);
@@ -43,7 +59,7 @@ export const useSourceStore = defineStore("source", {
       let source = this.currentSource,
         sources,
         searchKey;
-      if (/bookSource/.test(location.href)) {
+      if (isBookSource) {
         sources = this.bookSources;
         searchKey = "bookSourceUrl";
       } else {
@@ -66,34 +82,20 @@ export const useSourceStore = defineStore("source", {
       const newContent = JSON.stringify(source);
       this.currentSource = JSON.parse(newContent);
     },
-    // 修改当前源的某一个值
-    changeCurrentSourceValue(data) {
-      let value = data.value;
-      let convertor = {
-        true: true,
-        false: false,
-      };
-      if (data.type === "Boolean") value = convertor[value];
-      if (data.type === "Number") value = Number(value);
-
-      if (data.key.includes("_")) {
-        let rule1 = data.key.split("_")[0],
-          rule2 = data.key.split("_")[1],
-          obj = {};
-        obj[rule2] = value;
-        //this.currentSource[rule1] is Object, use `Object.assign` to override value
-        this.currentSource[rule1] = Object.assign(
-          this.currentSource[rule1] || {},
-          obj
+    async setPushReturnSources(returnSoures) {
+      if (isBookSource) {
+        // @ts-ignore
+        this.errorPushSources = this.sources.filter((source) =>
+          returnSoures.every(
+            (item) => item.bookSourceUrl !== source.bookSourceUrl
+          )
         );
       } else {
-        this.currentSource[data.key] = value;
+        // @ts-ignore
+        this.errorPushSources = this.sources.filter((source) =>
+          returnSoures.every((item) => item.sourceUrl !== source.sourceUrl)
+        );
       }
-      // edit last time
-      this.currentSource.lastUpdateTime = new Date().getTime();
-      //阅读app通过是否存在ruleToc键值判断3.0书源和2.0书源
-      if (/bookSource/.test(location.href))
-        this.currentSource["ruleToc"] = this.currentSource["ruleToc"] || {};
     },
     // update editTab tabName and editTab info
     changeTabName(tabName) {
@@ -136,15 +138,7 @@ export const useSourceStore = defineStore("source", {
     },
     clearEdit() {
       this.editTabSource = {};
-      this.currentSource = {};
-    },
-    appendDeBugMsg(msg) {
-      let el = document.querySelector("#debug_text");
-      el.scrollTop = el.scrollHeight;
-      this.deBugMsg += msg + "\n";
-    },
-    clearDeBugMsg() {
-      this.deBugMsg = "";
+      this.currentSource = emptySource;
     },
 
     // clear all source

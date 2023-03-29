@@ -1,57 +1,57 @@
+<script setup>
+import { Link } from "@element-plus/icons-vue";
+</script>
 <template>
-  <a href="https://alanskycn.gitee.io/teachme/" target="_blank">书源制作教程</a>
-  <a href="https://zhuanlan.zhihu.com/p/29436838" target="_blank"
-    >xpath基础教程</a
-  >
-  <a href="https://zhuanlan.zhihu.com/p/32187820" target="_blank"
-    >xpath高级教程</a
-  >
-  <a href="https://www.w3cschool.cn/regex_rmjc" target="_blank"
-    >正则表达式教程</a
-  ><a href="https://regexr-cn.com/" target="_blank">正则表达式在线验证工具</a>
+  <el-link
+    :icon="Link"
+    href="https://alanskycn.gitee.io/teachme/"
+    target="_blank"
+    >书源制作教程</el-link
+  ><br />
+  <el-link
+    :icon="Link"
+    href="https://zhuanlan.zhihu.com/p/29436838"
+    target="_blank"
+    >xpath基础教程</el-link
+  ><br />
+  <el-link
+    :icon="Link"
+    href="https://zhuanlan.zhihu.com/p/32187820"
+    target="_blank"
+    >xpath高级教程</el-link
+  ><br />
+  <el-link
+    :icon="Link"
+    href="https://www.w3cschool.cn/regex_rmjc"
+    target="_blank"
+    >正则表达式教程</el-link
+  ><br />
+  <el-link :icon="Link" href="https://regexr-cn.com/" target="_blank"
+    >正则表达式在线验证工具</el-link
+  ><br />
   <div style="margin-top: 20px">
-    <span><code>^$()[]{}.?+*|</code> 这些是Java正则特殊符号,匹配需转义</span
+    <span
+      ><el-text
+        ><code>^$()[]{}.?+*|</code> 这些是Java正则特殊符号,匹配需转义</el-text
+      ></span
     ><br />
-    <span><code>(?s)</code> 前缀表示跨行解析</span><br />
-    <span><code>(?m)</code> 前缀表示逐行匹配</span><br />
-    <span><code>(?i)</code> 前缀表示忽略大小写</span><br />
+    <span
+      ><el-text><code>(?s)</code> 前缀表示跨行解析</el-text></span
+    ><br />
+    <span
+      ><el-text><code>(?m)</code> 前缀表示逐行匹配</el-text></span
+    ><br />
+    <span
+      ><el-text><code>(?i)</code> 前缀表示忽略大小写</el-text></span
+    ><br />
   </div>
 </template>
 
-<script>
-export default {
-  name: "editHelp",
-};
-</script>
-
 <style lang="scss" scoped>
-a {
-  display: block;
-  height: 25px;
-  transition: margin-left 0.3s ease;
-  &:hover {
-    color: red;
-    margin-left: 10px;
-  }
+.el-link {
+  padding: 4px;
 }
-code {
-  display: inline-block;
-  font-size: 16px;
-  font-family: "Cascadia Mono", "JetBrains Mono", "Microsoft YaHei UI", serif;
-  background-color: #f3f4f4;
-  border-radius: 4px;
-}
-.author {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  a {
-    padding: 5px 10px;
-    border-radius: 4px;
-    &:hover {
-      box-shadow: 0 0 3px 3px #cccccc;
-      background-color: #dddddd;
-    }
-  }
+.el-text {
+  padding-top: 20px;
 }
 </style>

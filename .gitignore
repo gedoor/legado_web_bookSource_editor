@@ -15,6 +15,7 @@ yarn-error.log*
 pnpm-debug.log*
 
 # Editor directories and files
+.vim
 .idea
 .vscode
 *.suo
@@ -24,3 +25,9 @@ pnpm-debug.log*
 *.sw?
 /package-lock.json
 /yarn.lock
+pnpm-lock.yaml
+
+# unplugin-vue-components unplugin-auto-import
+components.d.ts
+auto-imports.d.ts
+.eslintrc-auto-import.json

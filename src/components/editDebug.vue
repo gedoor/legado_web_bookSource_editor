@@ -1,65 +1,55 @@
 <template>
-  <input
-    type="text"
-    style="text-align: center; border: 1px solid #dddddd; border-radius: 4px"
-    placeholder="输入搜索关键字，默认搜「我的」"
-    v-model="searchKey"
-    @input="changeSearch(searchKey)"
-    @keydown.enter="startSearch"
-    title="输入关键词 enter(回车键)快捷搜索"
+  <el-input
     v-if="isBookSource"
+    id="debug-key"
+    v-model="searchKey"
+    placeholder="搜索书名、作者"
+    :prefix-icon="Search"
+    style="padding-bottom: 4px"
+    @keydown.enter="startDebug"
   />
-  <textarea
-    placeholder="这里用于输出调试信息"
+  <el-input
+    id="debug-text"
     v-model="printDebug"
-    ref="textareaDom"
-    id="debug_text"
-  ></textarea>
+    type="textarea"
+    readonly
+    rows="29"
+    placeholder="这里用于输出调试信息"
+  />
 </template>
 
-<script>
-import { reactive, ref, toRefs, watchEffect, computed } from "vue";
-import { useSourceStore } from "@/store";
+<script setup>
+import API from "@api";
+import { Search } from "@element-plus/icons-vue";
 
-export default {
-  name: "editDebug",
-  setup() {
-    const store = useSourceStore();
-    const textareaDom = ref("");
-    const data = reactive({
-      printDebug: store.deBugMsg,
-      searchKey: "",
-    });
-    const changeSearch = (key) => {
-      store.searchKey = key;
-    };
-    watchEffect(() => {
-      data.printDebug = store.deBugMsg;
-    });
-    const startSearch = () => {
-      document.querySelectorAll(".menu>button")[7].click();
-    };
-    const isBookSource = computed(() => {
-      return /bookSource/.test(window.location.href);
-    });
-    return {
-      ...toRefs(data),
-      textareaDom,
-      changeSearch,
-      startSearch,
-      isBookSource,
-    };
-  },
+const store = useSourceStore();
+
+const printDebug = ref("");
+const searchKey = ref("");
+
+watchEffect(() => {
+  if (store.isDebuging) startDebug();
+});
+
+const appendDebugMsg = (msg) => {
+  let debugDom = document.querySelector("#debug-text");
+  debugDom.scrollTop = debugDom.scrollHeight;
+  printDebug.value += msg + "\n";
 };
+const startDebug = async () => {
+  printDebug.value = "";
+  await API.saveSource(store.currentSource);
+  API.debug(
+    store.currentSourceUrl,
+    searchKey.value || store.searchKey,
+    appendDebugMsg,
+    store.debugFinish
+  );
+};
+
+const isBookSource = computed(() => {
+  return /bookSource/.test(window.location.href);
+});
 </script>
 
-<style lang="scss" scoped>
-input {
-  outline: none;
-  height: 25px;
-  font-size: 16px;
-}
-textarea {
-  font-size: 14px;
-}
-</style>
+<style lang="scss" scoped></style>
