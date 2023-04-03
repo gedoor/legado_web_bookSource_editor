@@ -29,7 +29,7 @@ export default ({ mode }) =>
         include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/, /\.md$/],
         dirs: ["src/components", "src/store"],
         eslintrc: {
-          enabled: true,
+          //enabled: true,
         },
         resolvers: [
           ElementPlusResolver(),

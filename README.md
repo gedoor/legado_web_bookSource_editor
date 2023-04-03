@@ -4,48 +4,31 @@
 
 ## 🚧开发注意
 
-如果你想要调试项目 请在开发者模式里手动设置`localStorage` 如：`url : 192.168.0.101:1122`设置完毕刷新即可
+如果你想要调试项目 请修改文件`.env.development`里`VITE_API`为阅读web服务ip
 
-![image-20220903163437674](https://cdn.jsdelivr.net/gh/jgckM/image@main/image/202209031634758.png)
+## 路由
 
-- 完美的支持原来的 web 编辑功能
-- 调整页面布局
-- 支持点击文本域自适应高度
-- 加入快捷键
-- 删除多个书源
-# ~~Not~~Todo
-- [ ] 快捷键自定义和配置保存  
-
-# 🚀快捷键说明
-> 移除`Shift`快捷键
-
-| 操作               | 说明     |
-| :-------- | :-: |
-| `Ctrl`+`S`         | 保存书源 |
-| `Ctrl`+`Z`         | 撤销操作 |
-| `Ctrl`+`P` | 推送源 |
-| `Ctrl`+`E` | 生成源 |
-| `Ctrl`+`Enter`     | 调试源   |
-
+/rssSource 订阅源编辑
+/rssSource 书源编辑
 
 ## 🎨Project setup
 
 ```
-npm install
+pnpm i
 ```
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+pnpm run dev
 ```
 
 ### Compiles and minifies for production
 ```
-npm run build
+pnpm run build
 ```
 
 ### Lints and fixes files
 ```
-npm run lint:fix
+pnpm run lint:fix
 ```
 

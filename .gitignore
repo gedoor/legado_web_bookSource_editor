@@ -26,8 +26,3 @@ pnpm-debug.log*
 /package-lock.json
 /yarn.lock
 pnpm-lock.yaml
-
-# unplugin-vue-components unplugin-auto-import
-components.d.ts
-auto-imports.d.ts
-.eslintrc-auto-import.json
