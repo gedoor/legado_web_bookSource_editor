@@ -32,7 +32,7 @@
     "sass": "^1.60.0",
     "unplugin-auto-import": "^0.15.2",
     "unplugin-icons": "^0.16.0",
-    "unplugin-vue-components": "^0.24.1",
+    "unplugin-vue-components": "^0.25.1",
     "vite": "^4.2.1",
     "vite-plugin-html": "^3.2.0"
   }
